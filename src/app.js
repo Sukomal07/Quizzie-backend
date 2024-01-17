@@ -13,6 +13,14 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser())
 
+//import routes
+
+import userRoutes from './routes/user.routes.js'
+
+
+//routes config
+app.use("/api/v1/account", userRoutes)
+
 app.all("*", (req, res) => {
     res.status(404).json({
         status: 404,
