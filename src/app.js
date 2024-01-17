@@ -16,10 +16,11 @@ app.use(cookieParser())
 //import routes
 
 import userRoutes from './routes/user.routes.js'
-
+import quizRoutes from './routes/quiz.routes.js'
 
 //routes config
 app.use("/api/v1/account", userRoutes)
+app.use("/api/v1/quiz", quizRoutes)
 
 app.all("*", (req, res) => {
     res.status(404).json({
