@@ -350,3 +350,57 @@ export const attemptPollQuiz = asyncHandler(async (req, res) => {
 
     res.status(200).json(new ApiResponse(200, '', 'Thank you for participating in the Poll'));
 })
+
+export const getQuestionAnalysis = asyncHandler(async (req, res) => {
+    const { quizId } = req.params
+    const userId = req.user?._id
+
+    const quiz = await Quiz.aggregate([
+        {
+            $match: {
+                _id: new mongoose.Types.ObjectId(quizId),
+                owner: new mongoose.Types.ObjectId(userId),
+            },
+        },
+        {
+            $project: {
+                _id: 1,
+                quizName: 1,
+                createdAt: 1,
+                views: 1,
+                questions: {
+                    $map: {
+                        input: "$questions",
+                        as: "question",
+                        in: {
+                            questionName:
+                                "$$question.questionName",
+                            totalAttempts:
+                                "$$question.totalAttempts",
+                            totalCorrectAttempts:
+                                "$$question.totalCorrectAttempts",
+                            totalIncorrectAttempts:
+                                "$$question.totalIncorrectAttempts",
+                            options: {
+                                $map: {
+                                    input: "$$question.options",
+                                    as: "option",
+                                    in: {
+                                        totalAttempts:
+                                            "$$option.totalAttempts",
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    ]);
+
+    if (!quiz.length) {
+        throw new ApiError(404, 'Quiz not found');
+    }
+
+    res.status(200).json(new ApiResponse(200, quiz[0], 'Question analysis retrieved successfully'));
+})
