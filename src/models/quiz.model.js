@@ -40,6 +40,18 @@ const questionSchema = new Schema({
         },
     },
     options: [optionSchema],
+    totalAttempts: {
+        type: Number,
+        default: 0,
+    },
+    totalCorrectAttempts: {
+        type: Number,
+        default: 0
+    },
+    totalIncorrectAttempts: {
+        type: Number,
+        default: 0
+    }
 });
 
 const quizSchema = new Schema({
