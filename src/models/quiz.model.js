@@ -3,8 +3,12 @@ import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
 const optionSchema = new Schema({
     option: {
-        type: String,
-        required: true,
+        text: {
+            type: String,
+        },
+        imageUrl: {
+            type: String,
+        },
     },
     isCorrect: {
         type: Boolean,
