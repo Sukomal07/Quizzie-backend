@@ -77,40 +77,6 @@ const quizSchema = new Schema({
     timestamps: true,
 });
 
-questionSchema.methods.getAnalysis = function () {
-    const analysis = {
-        totalAttempts: 0,
-        totalCorrect: 0,
-        totalIncorrect: 0,
-        optionAnalysis: {},
-    };
-
-    if (this.quizType === 'Q&A') {
-        this.options.forEach((option) => {
-            analysis.optionAnalysis[option.option] = {
-                totalAttempts: option.totalAttempts,
-                totalCorrect: option.isCorrect ? option.totalAttempts : 0,
-                totalIncorrect: option.isCorrect ? 0 : option.totalAttempts,
-            };
-
-            analysis.totalAttempts += option.totalAttempts;
-            if (option.isCorrect) {
-                analysis.totalCorrect += option.totalAttempts;
-            } else {
-                analysis.totalIncorrect += option.totalAttempts;
-            }
-        });
-    } else if (this.quizType === 'Poll') {
-        this.options.forEach((option) => {
-            analysis.optionAnalysis[option.option] = {
-                totalAttempts: option.totalAttempts,
-            };
-        });
-    }
-
-    return analysis;
-};
-
 quizSchema.plugin(aggregatePaginate);
 
 const Quiz = model('Quiz', quizSchema);

@@ -2,6 +2,9 @@ import express from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import errorMiddleware from './middlewares/error.middleware.js'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const app = express()
 
