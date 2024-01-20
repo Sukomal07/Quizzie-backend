@@ -132,11 +132,11 @@ export const getTrendingQuiz = asyncHandler(async (req, res) => {
     ])
 
     if (!trendingQuizzes.length) {
-        throw new ApiError(404, 'There are no trending quiz')
+        throw new ApiError(404, 'No quiz found')
     }
 
     res.status(200).json(
-        new ApiResponse(200, trendingQuizzes[0], 'all trending quizs')
+        new ApiResponse(200, trendingQuizzes[0], 'All trending quizs')
     )
 })
 
