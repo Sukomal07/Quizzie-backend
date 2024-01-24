@@ -33,7 +33,7 @@ export const createQuiz = asyncHandler(async (req, res) => {
         }
 
         options.forEach((opt) => {
-            const { text, imageUrl } = opt.option;
+            const { text, imageUrl } = opt;
 
             if (quizType === 'Q&A') {
                 const { isCorrect } = opt;
