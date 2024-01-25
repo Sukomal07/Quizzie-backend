@@ -279,7 +279,7 @@ export const getQuizById = asyncHandler(async (req, res) => {
     ])
 
     if (!quiz.length) {
-        throw new ApiError(404, 'Video not found')
+        throw new ApiError(404, 'Quiz not found')
     }
 
     await Quiz.findByIdAndUpdate(quizId, { $inc: { views: 1 } }, { new: true })
