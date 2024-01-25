@@ -332,14 +332,11 @@ export const attemptPollQuiz = asyncHandler(async (req, res) => {
         throw new ApiError(404, 'Quiz not found');
     }
 
-    Object.keys(answers).forEach((questionIndex) => {
-        const index = parseInt(questionIndex);
-        const selectedOptionIndex = answers[questionIndex];
-
+    answers.forEach((selectedOptionIndex, index) => {
         if (index >= 0 && index < quiz.questions.length) {
             const question = quiz.questions[index];
 
-            if (selectedOptionIndex >= 0 && selectedOptionIndex < question.options.length) {
+            if (selectedOptionIndex !== null && selectedOptionIndex >= 0 && selectedOptionIndex < question.options.length) {
                 const selectedOption = question.options[selectedOptionIndex];
                 selectedOption.totalAttempts += 1;
             }
