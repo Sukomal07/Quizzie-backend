@@ -304,7 +304,7 @@ export const attemptQNAQuiz = asyncHandler(async (req, res) => {
         const userAnswerIndex = answers ? answers[index] : null;
         const correctAnswerIndex = question.options.findIndex((option) => option.isCorrect);
 
-        if (userAnswerIndex) {
+        if (userAnswerIndex !== null) {
             question.totalAttempts += 1;
 
             if (correctAnswerIndex !== -1) {
