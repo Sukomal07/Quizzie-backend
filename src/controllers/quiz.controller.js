@@ -183,7 +183,7 @@ export const deleteQuiz = asyncHandler(async (req, res) => {
 export const updateQuiz = asyncHandler(async (req, res) => {
     const userId = req.user?._id;
     const { quizId } = req.params;
-    const { questions } = req.body;
+    const { quizType, questions } = req.body;
     const quiz = await Quiz.findOne({ _id: quizId, owner: userId });
 
     if (!quiz) {
@@ -201,7 +201,7 @@ export const updateQuiz = asyncHandler(async (req, res) => {
     quiz.questions = [];
 
     questions.forEach((question) => {
-        const { questionName, optionType, options } = question;
+        const { questionName, optionType, options, timerOption } = question;
 
         if (!questionName || !optionType) {
             throw new ApiError(400, 'Question name and option type are required');
@@ -215,7 +215,18 @@ export const updateQuiz = asyncHandler(async (req, res) => {
         }
 
         options.forEach((option) => {
-            const { text, imageUrl } = option.option;
+            const { text, imageUrl } = option;
+
+            if (quizType === 'Q&A') {
+                const { isCorrect } = option;
+
+                if (typeof isCorrect !== 'boolean') {
+                    throw new ApiError(400, 'isCorrect only true or false');
+                }
+                if (!timerOption) {
+                    throw new ApiError(400, 'Please enter timer')
+                }
+            }
 
             if (optionType === 'text') {
                 if (!text) {
@@ -232,26 +243,8 @@ export const updateQuiz = asyncHandler(async (req, res) => {
             }
         });
 
-        quiz.questions.push({ questionName, optionType, options });
+        quiz.questions.push({ questionName, optionType, options, timerOption });
     });
-
-    if (quiz.quizType === 'Q&A') {
-        questions.forEach((question) => {
-            const { options, timerOption } = question;
-
-            options.forEach((option) => {
-                const { isCorrect } = option;
-
-                if (typeof isCorrect !== 'boolean') {
-                    throw new ApiError(400, 'isCorrect should be true or false');
-                }
-            });
-
-            if (!timerOption) {
-                throw new ApiError(400, 'Please enter timer for Q&A questions');
-            }
-        });
-    }
 
     await quiz.save();
 
