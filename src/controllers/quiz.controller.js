@@ -92,7 +92,8 @@ export const getTrendingQuiz = asyncHandler(async (req, res) => {
     const trendingQuizzes = await Quiz.aggregate([
         {
             $match: {
-                owner: new mongoose.Types.ObjectId(userId)
+                owner: new mongoose.Types.ObjectId(userId),
+                views: { $gt: 10 }
             }
         },
         {
